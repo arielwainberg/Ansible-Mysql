@@ -1,0 +1,25 @@
+---
+# vars file for /home/arielw/projects/ansible/mysql
+db_root_username: root
+mysql_root_password: PASSWORD # Modify this var to your root password
+db_username: DBUSER # Modify this var to your desired DB username you want to create
+db_host: localhost
+db_password: DBPASS # Modify this var to the desired password for the DB user
+
+# Destination TMP Directory
+tmp_folder: /tmp
+
+db_name: ansible
+table_name: Persons
+
+# Templates
+table_template: person.j2
+table_create: person.sql
+record_create: records.sql
+record_template: records.j2
+
+# DB Records Creation
+user_firstname: 'Bill'
+user_lastname: 'Gates'
+user_age: 63
+user_id: '00001'

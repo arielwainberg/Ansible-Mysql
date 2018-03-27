@@ -1,0 +1,15 @@
+---
+# tasks file for /home/arielw/projects/ansible/mysql
+
+# Install mysql and it dependecies
+- name: import install.yml tasks
+  import_tasks: install.yml
+
+# creates mysql user with admin 
+- name:  Creates my sql users
+  import_tasks: users.yml
+
+# Database interaction DB, Table, Records
+- name: Create Database
+  import_tasks: db.yml
+

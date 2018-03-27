@@ -1,0 +1,17 @@
+---
+- name: check if user {{db_username}} exists
+  shell: mysql --host={{ db_host }} --user={{ db_root_username }} --password={{ mysql_root_password }} -e 'SELECT User, Host FROM mysql.user;' | grep -c {{ db_username }}
+  register: userstatus
+  failed_when: userstatus.rc == 2
+
+- name: Create '{{db_username}}' User with authorizations
+  mysql_user:  
+    name: "{{ db_username }}"
+    host: "{{ db_host }}"
+    password: "{{ db_password }}"
+    priv: '*.*:ALL,GRANT'
+    check_implicit_admin: yes
+    login_user: "{{ db_root_username }}"
+    login_password: "{{ mysql_root_password }}"
+    state: present
+  when: userstatus.stdout == "0"

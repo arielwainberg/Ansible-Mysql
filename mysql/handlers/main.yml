@@ -1,0 +1,6 @@
+---
+# handlers file for /home/arielw/projects/ansible/mysql
+- name: restart mysql
+  service: 
+    name: mysql 
+    state: restarted  

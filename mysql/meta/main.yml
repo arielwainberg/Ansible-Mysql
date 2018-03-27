@@ -1,0 +1,20 @@
+galaxy_info:
+  author: Ariel Wainberg
+  description: Mysql Installation Ansible Automation Exersise
+  company: HomeWork
+  license: license (GPLv2, CC-BY, etc)
+  min_ansible_version: 2.4
+  platforms:
+   - name: Ubuntu
+     versions:
+       - 16
+  # - name: SomePlatform
+  #   versions:
+  #   - all
+  #   - 1.0
+  #   - 7
+  #   - 99.99
+
+  galaxy_tags: 
+    mysql
+    database

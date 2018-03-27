@@ -1,0 +1,55 @@
+- name: check if '{{db_name}}'DB exists
+  shell: mysql --host={{ db_host }} --user={{ db_username }} --password={{ db_password }} -e 'SHOW DATABASES;' | grep -c {{ db_name }}
+  register: dbstatus
+  failed_when: dbstatus.rc == 2
+
+- name: check if '{{table_name}}' table exists
+  shell: mysql --host={{ db_host }} --user={{ db_username }} --password={{ db_password }} -e 'use ansible; show tables;' | grep -c '{{table_name}}'
+  register: tablestatus 
+  failed_when: tablestatus.rc == 2
+
+- name: check if record '{{user_id}}' Userid exists
+  shell: mysql --host={{ db_host }} --user={{ db_username }} --password={{ db_password }} -e 'use ansible; SELECT user_id FROM Persons;' | grep -c '{{user_id}}'
+  register: recordstatus
+  failed_when: recordstatus.rc == 2
+
+- name: create a new database with name {{db_name}}
+  mysql_db:
+    name: '{{db_name}}'
+    login_host: '{{db_host}}'
+    login_user: '{{db_username}}'
+    login_password: '{{db_password}}'
+    state: present
+  when: dbstatus.stdout == "0"
+  
+- name: Copy '{{table_create}}' sql scripts using template to db server in order to import it
+  template:
+    src: "{{ role_path }}/templates/{{table_template}}"
+    dest: "{{tmp_folder}}/{{table_create}}"
+  when: tablestatus.stdout == "0"
+
+- name: Import {{table_create}} script file
+  mysql_db:
+    state: import
+    target: "{{tmp_folder}}/{{table_create}}"
+    name: '{{db_name}}'
+    login_host: '{{db_host}}'
+    login_user: '{{db_username}}'
+    login_password: '{{db_password}}'
+  when: tablestatus.stdout == "0"
+
+- name: Copy '{{record_create}}' sql scripts using template to db server in order to import it
+  template:
+    src: "{{ role_path }}/templates/{{record_template}}"
+    dest: "{{tmp_folder}}/{{record_create}}"
+  when: recordstatus.stdout == "0"
+
+- name: Import {{record_create}} script file
+  mysql_db:
+    state: import
+    target: "{{tmp_folder}}/{{record_create}}"
+    name: '{{db_name}}'
+    login_host: '{{db_host}}'
+    login_user: '{{db_username}}'
+    login_password: '{{db_password}}'
+  when: recordstatus.stdout == "0"

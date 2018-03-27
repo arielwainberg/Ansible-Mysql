@@ -1,0 +1,10 @@
+---
+- name: install mysql server
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - python-mysqldb
+    - mysql-server
+  
